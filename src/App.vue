@@ -1,28 +1,66 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <hemiciclo-chart :current-data="currentData" :previous-data="previousData" :show-current="showCurrent"/>
+        <button :class="{'an-enabled': !showCurrent}" @click="showCurrent=false">2015</button>
+        <button :class="{'an-enabled': showCurrent}"  @click="showCurrent=true">2016</button>
+        <section class="an-tables">
+            <results-table :candidaturas="currentData.candidaturas"/>
+            <results-table :candidaturas="previousData.candidaturas"/>
+        </section>
+    </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+    import axios from 'axios';
+    import HemicicloChart from './components/HemicicloChart';
+    import ResultsTable from './components/ResultsTable';
 
-export default {
-  name: "app",
-  components: {
-    HelloWorld
-  }
-};
+    export default {
+        name: 'app',
+        data() {
+            return {
+                currentData: {},
+                previousData: {},
+                showCurrent: true,
+            };
+        },
+        methods: {
+            loadData() {
+                axios.get('/2015/congreso.json')
+                    .then(response => response.data)
+                    .then(data => {
+                        this.previousData = data;
+                    });
+                axios.get('/2016/congreso.json')
+                    .then(response => response.data)
+                    .then(data => {
+                        this.currentData = data;
+                    });
+
+            },
+        },
+        mounted() {
+            this.loadData();
+        },
+        components: {
+            HemicicloChart,
+            ResultsTable,
+        },
+    };
 </script>
 
 <style lang="less">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    html {
+        font-family: Helvetica;
+    }
+    section.an-tables {
+        display: flex;
+    }
+    button {
+        border-radius: 0;
+    }
+    .an-enabled {
+        background: gray;
+        color: white;
+    }
 </style>
