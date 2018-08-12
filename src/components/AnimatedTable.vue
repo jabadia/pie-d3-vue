@@ -1,22 +1,24 @@
 <template>
-    <div class="an-results-table">
-        <table v-if="candidaturas">
+    <div class="an-results-table an-animated-results-table">
+        <table>
+            <thead>
             <tr>
-                <th>Partido</th>
+                <th>Candidatura</th>
                 <th>Escaños</th>
                 <th>Votos</th>
             </tr>
+            </thead>
+            <tbody name="table-row" is="transition-group">
             <tr v-for="(candidatura,i) in candidaturasWithEscanos"
+                class="table-row-item"
                 :class="{'an-odd-row': i % 2}"
-                :key="i"> <!-- candidatura.sCandidaturaUnificada -->
+                :key="i">
                 <td class="an-candidatura">{{candidatura.sCandidatura}}</td>
                 <td class="an-escanos">{{candidatura.iEscanos}}</td>
                 <td class="an-votos">{{candidatura.iVotos|formatNumber}}</td>
             </tr>
+            </tbody>
         </table>
-        <div v-else>
-            cargando...
-        </div>
     </div>
 </template>
 
@@ -39,26 +41,21 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
-    .an-results-table {
-        width: 33%;
-
-        table {
-            border-collapse: collapse;
-            border-spacing: 0;
+    .an-animated-results-table {
+        .table-row-move {
+            transition: all .5s;
         }
-
-        td {
-            padding: 1px 5px;
+        .table-row-item {
+            backface-visibility: hidden;
+            transition: all 1s;
         }
-
-        .an-odd-row {
-            background: #ddd;
+        .table-row-enter, .table-row-leave-to
+            /* .list-complete-leave-active below version 2.1.8 */ {
+            opacity: 0;
+            /*transform: translateY(30px);*/
         }
-        .an-escanos {
-            text-align: right;
-        }
-        .an-votos {
-            text-align: right;
+        .table-row-leave-active {
+            position: absolute;
         }
     }
 </style>

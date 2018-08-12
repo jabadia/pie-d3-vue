@@ -1,11 +1,12 @@
 <template>
     <div id="app">
         <hemiciclo-chart :current-data="currentData" :previous-data="previousData" :show-current="showCurrent"/>
-        <button :class="{'an-enabled': !showCurrent}" @click="showCurrent=false">2015</button>
-        <button :class="{'an-enabled': showCurrent}"  @click="showCurrent=true">2016</button>
+        <button :class="{'an-enabled': !showCurrent}" @click="showCurrent=false">2011</button>
+        <button :class="{'an-enabled': showCurrent}" @click="showCurrent=true">2016</button>
         <section class="an-tables">
-            <results-table :candidaturas="currentData.candidaturas"/>
             <results-table :candidaturas="previousData.candidaturas"/>
+            <results-table :candidaturas="currentData.candidaturas"/>
+            <animated-table :candidaturas="showCurrent ? currentData.candidaturas : previousData.candidaturas"/>
         </section>
     </div>
 </template>
@@ -14,6 +15,7 @@
     import axios from 'axios';
     import HemicicloChart from './components/HemicicloChart';
     import ResultsTable from './components/ResultsTable';
+    import AnimatedTable from './components/AnimatedTable';
 
     export default {
         name: 'app',
@@ -26,7 +28,7 @@
         },
         methods: {
             loadData() {
-                axios.get('/2015/congreso.json')
+                axios.get('/2011/congreso.json')
                     .then(response => response.data)
                     .then(data => {
                         this.previousData = data;
@@ -36,7 +38,6 @@
                     .then(data => {
                         this.currentData = data;
                     });
-
             },
         },
         mounted() {
@@ -45,6 +46,7 @@
         components: {
             HemicicloChart,
             ResultsTable,
+            AnimatedTable,
         },
     };
 </script>
@@ -53,12 +55,15 @@
     html {
         font-family: Helvetica;
     }
+
     section.an-tables {
         display: flex;
     }
+
     button {
         border-radius: 0;
     }
+
     .an-enabled {
         background: gray;
         color: white;
