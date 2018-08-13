@@ -20,6 +20,10 @@
         props: {
             sector: Object,
             tooltip: Object,
+            duration: {
+                type: Number,
+                default: 0.5,
+            },
         },
         data() {
             return {
@@ -36,13 +40,12 @@
             sector: {
                 immediate: true,
                 handler(newSector) {
-                    // console.log(newSector.data.sCandidaturaUnificada, newSector.startAngle, newSector.endAngle);
-                    TweenLite.to(this.animatedSector, 0.5, {
+                    TweenLite.to(this.animatedSector, this.duration, {
                         startAngle: newSector.startAngle,
                         endAngle: newSector.endAngle,
                         padAngle: newSector.padAngle,
                     });
-                    TweenLite.to(this.$data, 0.5, {
+                    TweenLite.to(this.$data, this.duration, {
                         animatedLabel: newSector.data.iEscanos,
                     });
                 },

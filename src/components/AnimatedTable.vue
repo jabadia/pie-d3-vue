@@ -13,7 +13,9 @@
                 class="table-row-item"
                 :class="{'an-odd-row': i % 2}"
                 :key="candidatura.sCandidaturaUnificada">
-                <td class="an-candidatura"><span :class="`fg-${candidatura.sCandidaturaUnificada}`">&#9724;</span> {{candidatura.sCandidatura}}</td>
+                <td class="an-candidatura"><span :class="`fg-${candidatura.sCandidaturaUnificada}`">&#9724;</span>
+                    {{candidatura.sCandidatura}}
+                </td>
                 <td class="an-escanos">{{candidatura.iEscanos}}</td>
                 <td class="an-votos">{{candidatura.iVotos|formatNumber}}</td>
             </tr>

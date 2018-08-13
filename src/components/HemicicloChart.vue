@@ -3,10 +3,11 @@
         <svg class="an-hemiciclo-chart" :width="width" :height="height" :viewBox="[0,0,width,height].join(' ')">
             <g v-if="sectors" class="an-pie" :transform="`translate(${width/2}, ${height})`">
                 <animated-sector
-                    v-for="(sector, index) in sectors"
+                    v-for="sector in sectors"
                     :sector="sector"
                     :tooltip="tooltip"
-                    :key="sector.data.sCandidaturaUnificada"/>
+                    :key="sector.data.sCandidaturaUnificada"
+                    :duration="duration"/>
             </g>
         </svg>
         <div
@@ -46,7 +47,13 @@
                         y: 0,
                     },
                 },
+                duration: 1.0,
             };
+        },
+        watch: {
+            showCurrent() {
+                this.duration = 0.5;
+            },
         },
         computed: {
             candidaturas() {
@@ -55,11 +62,9 @@
                     : this.previousData && this.previousData.candidaturas;
             },
             candidaturasWithEscanos() {
-                // console.log(_.countBy(this.candidaturas, 'sCandidaturaUnificada'));
                 return this.candidaturas && this.candidaturas.filter(c => c.iEscanos !== 0);
             },
             sectors() {
-                // console.log('recalculating sectors', _.map(this.candidaturasWithEscanos, 'sCandidaturaUnificada'));
                 return this.candidaturasWithEscanos && this.pie(this.candidaturasWithEscanos);
             },
             pie() {
@@ -91,6 +96,7 @@
 
     .an-chart-wrapper {
         position: relative;
+
         .an-hemiciclo-chart {
             display: block;
         }
