@@ -12,8 +12,8 @@
             <tr v-for="(candidatura,i) in candidaturasWithEscanos"
                 class="table-row-item"
                 :class="{'an-odd-row': i % 2}"
-                :key="i">
-                <td class="an-candidatura">{{candidatura.sCandidatura}}</td>
+                :key="candidatura.sCandidaturaUnificada">
+                <td class="an-candidatura"><span :class="`fg-${candidatura.sCandidaturaUnificada}`">&#9724;</span> {{candidatura.sCandidatura}}</td>
                 <td class="an-escanos">{{candidatura.iEscanos}}</td>
                 <td class="an-votos">{{candidatura.iVotos|formatNumber}}</td>
             </tr>
@@ -46,13 +46,11 @@
             transition: all .5s;
         }
         .table-row-item {
-            backface-visibility: hidden;
             transition: all 1s;
         }
-        .table-row-enter, .table-row-leave-to
-            /* .list-complete-leave-active below version 2.1.8 */ {
+        .table-row-enter, .table-row-leave-to {
             opacity: 0;
-            /*transform: translateY(30px);*/
+            /*transform: translateX(30px);*/
         }
         .table-row-leave-active {
             position: absolute;

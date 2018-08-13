@@ -1,19 +1,28 @@
 <template>
-    <svg class="an-hemiciclo-chart" :width="width" :height="height" :viewBox="[0,0,width,height].join(' ')">
-        <g v-if="sectors" class="an-pie" :transform="`translate(${width/2}, ${height})`">
-            <animated-sector
-                v-for="(sector, index) in sectors"
-                :sector="sector"
-                :data-index="index"
-                :data-candidatura-unificada="sector.data.sCandidaturaUnificada"
-                :key="index"/> <!-- sector.data.sCandidaturaUnificada -->
-        </g>
-    </svg>
+    <div class="an-chart-wrapper">
+        <svg class="an-hemiciclo-chart" :width="width" :height="height" :viewBox="[0,0,width,height].join(' ')">
+            <g v-if="sectors" class="an-pie" :transform="`translate(${width/2}, ${height})`">
+                <animated-sector
+                    v-for="(sector, index) in sectors"
+                    :sector="sector"
+                    :tooltip="tooltip"
+                    :key="sector.data.sCandidaturaUnificada"/>
+            </g>
+        </svg>
+        <div
+            class="an-tooltip"
+            :class="{'an-tooltip--visible': tooltip.visible}"
+            :style="tooltipPos">
+            <div v-if="tooltip.data">
+                <span :class="`fg-${tooltip.data.sCandidaturaUnificada}`">{{tooltip.data.sCandidatura}}</span>:
+                {{tooltip.data.iEscanos}}
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
     import * as d3 from 'd3';
-    import _ from 'lodash';
     import AnimatedSector from './AnimatedSector';
 
     export default {
@@ -27,6 +36,16 @@
             return {
                 width: 400,
                 height: 200,
+                tooltip: {
+                    x: 0,
+                    y: 0,
+                    text: '',
+                    visible: false,
+                    offset: {
+                        x: 10,
+                        y: 0,
+                    },
+                },
             };
         },
         computed: {
@@ -54,6 +73,12 @@
                     .value(d => d.iEscanos)
                     .sort(null);
             },
+            tooltipPos() {
+                return {
+                    left: this.tooltip.offset.x + this.tooltip.x + 'px',
+                    top: this.tooltip.offset.y + this.tooltip.y + 'px',
+                };
+            },
         },
         components: {
             AnimatedSector,
@@ -62,91 +87,45 @@
 </script>
 
 <style lang="less">
+    @import (reference) 'colors';
 
-    @pp: #11a3de;
-    @psoe: #d20a11;
-    @ciudadanos: #ec6b27;
-    @podemos: #6e2362;
+    .an-chart-wrapper {
+        position: relative;
+        .an-hemiciclo-chart {
+            display: block;
+        }
+        .an-tooltip {
+            position: absolute;
+            padding: 5px;
+            background: white;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
 
-    @iu: #009f62;
-    @pnv: #006634;
-    @upyd: #e7548e;
-    @ciu: #2E3272; // CDC - // Democracia i Llibertat -
-
-    @amaiur: #118f9f;
-    @bildu: #b3c900;
-    @ccanaria: #eeda00;
-    @bng: #8dd8f8;
-
-    @gbai: #ae2f17;
-    @esquerra: #fe9f08;
-    @compromis: #ec4f07;
-    @fac: #17375e;
-
-    @otros: #93a2a9;
-    @sinasignar: rgb(204, 204, 204);
-
-    .an-hemiciclo-chart {
-        .an-sector {
-            fill: gray;
-
-            &.fill-sinasignar {
-                fill: @sinasignar;
-            }
-            &.fill-otros {
-                fill: @otros;
-            }
-            &.fill-pp {
-                fill: @pp;
-            }
-            &.fill-psoe {
-                fill: @psoe;
-            }
-            &.fill-ciudadanos {
-                fill: @ciudadanos;
-            }
-            &.fill-podemos {
-                fill: @podemos;
-            }
-            &.fill-podemos-iu {
-                fill: @podemos;
-            }
-            &.fill-iu {
-                fill: @iu;
-            }
-            &.fill-pnv {
-                fill: @pnv;
-            }
-            &.fill-upyd {
-                fill: @upyd;
-            }
-            &.fill-ciu {
-                fill: @ciu;
-            }
-            &.fill-amaiur {
-                fill: @amaiur;
-            }
-            &.fill-bildu {
-                fill: @bildu;
-            }
-            &.fill-ccanaria {
-                fill: @ccanaria;
-            }
-            &.fill-bng {
-                fill: @bng;
-            }
-            &.fill-gbai {
-                fill: @gbai;
-            }
-            &.fill-esquerra {
-                fill: @esquerra;
-            }
-            &.fill-compromis {
-                fill: @compromis;
-            }
-            &.fill-fac {
-                fill: @fac;
+            &--visible {
+                opacity: 0.8;
             }
         }
     }
+
+    .fg-sinasignar  { color: @sinasignar; }
+    .fg-otros       { color: @otros;      }
+    .fg-pp          { color: @pp;         }
+    .fg-psoe        { color: @psoe;       }
+    .fg-ciudadanos  { color: @ciudadanos; }
+    .fg-podemos     { color: @podemos;    }
+    .fg-podemos-iu  { color: @podemos;    }
+    .fg-iu          { color: @iu;         }
+    .fg-pnv         { color: @pnv;        }
+    .fg-upyd        { color: @upyd;       }
+    .fg-ciu         { color: @ciu;        }
+    .fg-amaiur      { color: @amaiur;     }
+    .fg-bildu       { color: @bildu;      }
+    .fg-ccanaria    { color: @ccanaria;   }
+    .fg-bng         { color: @bng;        }
+    .fg-gbai        { color: @gbai;       }
+    .fg-esquerra    { color: @esquerra;   }
+    .fg-compromis   { color: @compromis;  }
+    .fg-fac         { color: @fac;        }
+
 </style>

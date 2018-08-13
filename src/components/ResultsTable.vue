@@ -41,8 +41,10 @@
 <style lang="less" rel="stylesheet/less">
     .an-results-table {
         width: 33%;
+        margin: 0 10px;
 
         table {
+            width: 100%;
             border-collapse: collapse;
             border-spacing: 0;
         }
@@ -52,7 +54,7 @@
         }
 
         .an-odd-row {
-            background: #ddd;
+            background: #e7e7e7;
         }
         .an-escanos {
             text-align: right;
