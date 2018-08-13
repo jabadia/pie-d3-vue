@@ -1,6 +1,6 @@
 <template>
-    <g  class="an-sector"
-        :class="`sector-${candidatura.sCandidaturaUnificada} ${anHover? 'an-hover':''}`">
+    <g class="an-sector"
+       :class="`sector-${candidatura.sCandidaturaUnificada} ${anHover? 'an-hover':''}`">
         <path
             :d='arc(animatedSector)'
             @mousemove="mousemove"
@@ -90,7 +90,7 @@
             },
         },
         filters: {
-            formatNumber(n, d=0) {
+            formatNumber(n, d = 0) {
                 return Number(n).toLocaleString('en-US', {minimumFractionDigits: d, maximumFractionDigits: d});
             },
         },
